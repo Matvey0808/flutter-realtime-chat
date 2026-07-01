@@ -11,8 +11,8 @@ class ChatCubit extends Cubit<List<Message>> {
 
     final message = Message(
       id: 0,
-      roomId: 0,
-      senderId: 0,
+      roomId: "0",
+      senderId: "0",
       textMessage: textMessage
     );
 
