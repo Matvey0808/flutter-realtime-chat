@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_realtime_chat/src/features/home/presentation/bloc/room_cubit.dart';
 
-void showDialogPersonAdd(BuildContext context) {
+void showDialogPersonAdd(BuildContext context, RoomCubit cubit) {
   showDialog(
     context: context,
     builder: (dialogContext) {
-      return PersonAddDialogWidget();
+      return PersonAddDialogWidget(cubit: cubit);
     },
   );
 }
 
 class PersonAddDialogWidget extends StatelessWidget {
-  const PersonAddDialogWidget({super.key});
+  const PersonAddDialogWidget({super.key, required this.cubit});
+
+  final RoomCubit cubit;
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +23,13 @@ class PersonAddDialogWidget extends StatelessWidget {
         children: [Center(child: Text("Persons"))],
       ),
       actions: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Alice"),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Bob"),
-            ),
-          ],
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              cubit.createUsers();
+            },
+            child: Text("Create Users")
+          ),
         ),
       ],
     );

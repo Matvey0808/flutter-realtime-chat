@@ -1,5 +1,5 @@
 import 'package:flutter_realtime_chat/src/features/chat/models/message_model.dart';
-import 'package:flutter_realtime_chat/src/features/chat/models/room_model.dart';
+import 'package:flutter_realtime_chat/src/features/home/models/room_model.dart';
 import 'package:flutter_realtime_chat/src/features/chat/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -27,31 +27,14 @@ class ApiService {
     }
   }
 
-  Future<List<Room>> getUserRoom() async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/api/rooms?user_id=$_currentUserId'),
-      headers: {'Accept': 'application/json'}
-    );
-    
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      final List<dynamic> roomList = data['items'] ?? [];
-      return roomList.map((json) => Room.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to get user rooms: ${response.statusCode}');
-    }
-  }
-
-  Future<Room> createRoom(String userBiD) async {
+  Future<Room> createRoom(String userAId, String userBId) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/api/rooms/direct'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'user_a_id': _currentUserId,
-        'user_b_id': userBiD,
-      })
+        'user_a_id': userAId,
+        'user_b_id': userBId
+      }),
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {
