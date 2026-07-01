@@ -48,14 +48,28 @@ class RoomState extends Equatable {
 
 class RoomCubit extends Cubit<RoomState> {
   final ApiService _apiService;
+  late final String _currentUserId;
 
-  RoomCubit(this._apiService) : super(const RoomState());
+  RoomCubit(this._apiService) : super(const RoomState()) {
+    _currentUserId = "user-alice-id";
+  }
 
   Future<void> createUsers() async {
     emit(state.copyWith(status: RoomStatus.loading));
     try {
-      final alice = await _apiService.createUser('Alice');
-      final bob = await _apiService.createUser('Bob');
+      User alice;
+      if (state.alice == null) {
+        alice = await _apiService.createUser('Alice');
+      } else {
+        alice = state.alice!;
+      }
+
+      User bob;
+      if (state.bob == null) {
+        bob = await _apiService.createUser('Bob');
+      } else {
+        bob = state.bob!;
+      }
 
       final room = await _apiService.createRoom(alice.id, bob.id);
 
@@ -66,8 +80,13 @@ class RoomCubit extends Cubit<RoomState> {
         room: room
       ));
     } catch (e) {
-      emit(state.copyWith(status: RoomStatus.error, error: 'Failed'));
-      print('Error creating Alice, Bob, or room $e');
+      print("Error creating Alice, Bob or Room: $e");
     }
+  }
+
+  User? getUser(String currentUserId) {
+    if (state.alice?.id == currentUserId && state.bob != null) return state.bob;
+    if (state.bob?.id == currentUserId && state.alice != null) return state.alice;
+    return null;
   }
 }

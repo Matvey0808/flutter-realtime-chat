@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_realtime_chat/src/features/chat/models/message_model.dart';
+import 'package:flutter_realtime_chat/src/features/chat/models/user_model.dart';
 import 'package:flutter_realtime_chat/src/features/chat/presentation/bloc/chat_cubit.dart';
 import 'package:flutter_realtime_chat/src/features/chat/presentation/widgets/message_card_widget.dart';
+import 'package:flutter_realtime_chat/src/features/chat/services/websocket_service.dart';
+import 'package:flutter_realtime_chat/src/features/home/models/room_model.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+  const ChatPage({super.key, required this.room, required this.username, required this.currentUserId});
+
+  final Room room;
+  final User username;
+  final String currentUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +20,18 @@ class ChatPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) {
-        return ChatCubit();
+        final wsService = context.read<WebSocketService>();
+        return ChatCubit(
+          webSocketService: wsService,
+          currentUserId: currentUserId,
+          roomId: room.id
+        );
       },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black26,
           title: Text(
-            "Пользователь",
+            username.name,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
           ),
           centerTitle: true,
@@ -43,7 +55,7 @@ class ChatPage extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 5),
-                                  child: Text("username"),
+                                  child: Text(username.name),
                                 )
                               ),
                               Align(
