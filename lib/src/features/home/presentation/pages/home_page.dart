@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
               highlightElevation: 0,
               onPressed: () {
                 final cubit = context.read<RoomCubit>();
-                showDialogPersonAdd(context, cubit);
+                showDialogPersonAdd(context);
               },
               child: Icon(Icons.person, size: 26, color: Colors.white),
             ),

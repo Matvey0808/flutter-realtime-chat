@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_realtime_chat/src/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_realtime_chat/src/features/home/presentation/pages/home_page.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
